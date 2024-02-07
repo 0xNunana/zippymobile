@@ -40,6 +40,7 @@ const Index = () => {
     try {
       if (!orderId.trim()) { // Check if orderId is empty or whitespace
         setError('Please enter a tracking number');
+        setsearchData(null)
         return;
       }
 
@@ -52,6 +53,7 @@ const Index = () => {
       const result = await response.json();
       if (response.ok) {
         setsearchData(result);
+     
         return result;
       } else {
         setError('No search found'); // Set error message for incorrect login
@@ -97,28 +99,43 @@ const Index = () => {
 
 
     {
-searchdata &&     <View style={styles.card} >
+searchdata?.data &&   <View style={styles.card} >
 <View>
 <Image source={require('../../assets/images/bike.png')}/>
 </View>
 
 <View style={{flex:1}}>
 <View>
-  <Text>{searchdata.data.custId}</Text>
-<Text>To: Hagan Kwame</Text>
-<Text>East Legon - Dzorwulu</Text>
-<Text style={{color:'#1680E4'}}>15th Jan,2024-3:00pm</Text>
+  <Text style={{fontWeight:'bold'}}>{searchdata?.data?.orderId}</Text>
+<Text>To: {searchdata?.data?.receiverName}</Text>
+<Text>{searchdata?.data?.senderAddress}</Text>
+<Text>{searchdata?.data?.receiverAddress}</Text>
+<Text style={{color:'#1680E4'}}>{searchdata?.data?.pickupTime}</Text>
 </View>
 </View>
 
 
-
-<View style={{backgroundColor:'yellow',paddingHorizontal:7,paddingVertical:5,borderRadius:8}}>
-    <Text>In Progress</Text>
-    </View>
+<View>
+<View style={{backgroundColor: searchdata?.data?.status === 'Order Received' ? '#00A89C14' : searchdata?.data?.status === 'Order Picked Up' ? '#1680E414': searchdata?.data?.status === 'Cancelled' ? '#CE112614' : '#FCD1161A', paddingHorizontal:7,paddingVertical:5,borderRadius:8}}>
+        <Text style={{color:searchdata?.data?.status === 'Order Received' ? '#00A89C' : searchdata?.data?.status === 'Order Picked Up' ? '#1680E4': searchdata?.data?.status === 'Cancelled' ? '#CE1126' : '#EEC200'}}>{searchdata?.data?.status}</Text>
+      </View>
+  <View style={{flexDirection:'row',justifyContent:'center' ,alignItems:'center'}}>
+    <Text>  {searchdata?.data?.deliveryTime}</Text>
+  </View>
 </View>
 
+</View>
     }
+
+    {searchdata?.responseCode =='005' && <View style={{padding:5,justifyContent:'center',alignItems:'center'}}>
+      <Text>{searchdata.responseDesc}</Text>
+      </View>}
+{orderId==='' && <View style={{padding:5,justifyContent:'center',alignItems:'center'}}>
+  <Text>{error}</Text>
+  </View>}
+
+
+
       <View style={{flexDirection:'row', justifyContent:'space-between',alignItems:'center', padding: 10,marginTop:20 }}>
       <Text style={{fontSize:16,fontWeight:'700'}}>Latest Orders</Text>
       <Text style={{color:'#4CA7A8',fontWeight:'600'}}>See All</Text>

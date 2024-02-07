@@ -23,7 +23,7 @@ const Login = () => {
 
       const success = await response.json()
 
-      if (response.ok) {
+      if (success.responseCode=='002') {
         setData(success)
         router.navigate('/(tabs)'); // Navigate to the tabs screen on successful login
       } else {
@@ -42,7 +42,7 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      
+
       <View style={styles.image}>
         <Image source={require('../assets/images/logo.png')} />
       </View>
@@ -80,7 +80,7 @@ const Login = () => {
           </TouchableOpacity>
         </View>
 
-        {/* {error ? <Text style={styles.error}>{error}</Text> : null} Show error message if present */}
+         {error && <Text style={styles.error}>{error}</Text> } 
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
